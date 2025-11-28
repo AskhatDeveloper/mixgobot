@@ -1,0 +1,6 @@
+{"items": [{"drink": "Фраппе", "qty": 2}], "delivery": "delivery"}
+{"items": [{"drink": "Банановый смузи", "qty": 5}], "delivery": "pickup"}
+{"items": [{"drink": "Банановый смузи", "qty": 2}], "delivery": "pickup"}
+{"items": [{"drink": "Клубничный смузи", "qty": 4}], "delivery": "delivery"}
+{"items": [{"drink": "Фраппе", "qty": 1}], "delivery": "pickup"}
+{"items": [{"drink": "Клубничный смузи", "qty": 1}], "delivery": "pickup"}
