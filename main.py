@@ -1,8 +1,10 @@
+import os;
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes, ConversationHandler, MessageHandler, filters
 import json, datetime
 
 BUSINESS_NAME = "Mix Go"
+users_orders = {}
 MENU = {"Фраппе":990,"Банановый смузи":990,"Клубничный смузи":1050}
 YOUR_ID = 8206672878
 ORDER_FILE = "orders.txt"
@@ -91,7 +93,8 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 if __name__=="__main__":
-    TOKEN="8583327299:AAFZndLszdef7lXqX5us0tv3J1IF3kOCpc4"
+    # TOKEN="8583327299:AAFZndLszdef7lXqX5us0tv3J1IF3kOCpc4"
+    TOKEN = os.environ.get("TELEGRAM_TOKEN")
     app=ApplicationBuilder().token(TOKEN).build()
     conv_handler=ConversationHandler(
         entry_points=[CommandHandler('start',start)],
