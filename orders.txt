@@ -4,3 +4,9 @@
 {"items": [{"drink": "Клубничный смузи", "qty": 4}], "delivery": "delivery"}
 {"items": [{"drink": "Фраппе", "qty": 1}], "delivery": "pickup"}
 {"items": [{"drink": "Клубничный смузи", "qty": 1}], "delivery": "pickup"}
+{"items": [{"drink": "Банановый смузи", "qty": 1}], "delivery": "pickup"}
+{"items": [{"drink": "Банановый смузи", "qty": 1}], "delivery": "pickup"}
+{"items": [{"drink": "Фраппе", "qty": 1}], "delivery": "delivery"}
+{"items": [{"drink": "Фраппе", "qty": 5}], "delivery": "pickup"}
+{"items": [{"drink": "Фраппе", "qty": 1}], "contact": "+77070171670", "delivery": "delivery"}
+{"items": [{"drink": "Фраппе", "qty": 3}], "contact": "77074976737", "delivery": "pickup"}
