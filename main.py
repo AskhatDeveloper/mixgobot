@@ -1,17 +1,19 @@
 import os;
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes, ConversationHandler, MessageHandler, filters
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes, ConversationHandler, MessageHandler, filters, Application
 import json, datetime
 
-BUSINESS_NAME = "Mix Go"
+# --- КОНСТАНТЫ (Без изменений) ---
+BUSINESS_NAME = "Frucino"
 users_orders = {}
 MENU = {"Фраппе":990,"Банановый смузи":990,"Клубничный смузи":1050}
-YOUR_ID = 8206672878
+YOUR_ID = 8206672878 # Ваш ID
 ORDER_FILE = "orders.txt"
 
 CHOOSING_DRINK, CHOOSING_QTY, DELIVERY, CONFIRM_ORDER = range(4)
 users_orders = {}
 
+# --- АСИНХРОННЫЕ ФУНКЦИИ (Без изменений) ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[InlineKeyboardButton(f"{name} — {price} ₸", callback_data=name)] for name, price in MENU.items()]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -92,11 +94,24 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Вы отменили заказ.")
     return ConversationHandler.END
 
+# --- БЛОК ЗАПУСКА (ИЗМЕНЕН) ---
 if __name__=="__main__":
-    # TOKEN="8583327299:AAFZndLszdef7lXqX5us0tv3J1IF3kOCpc4"
+    
+    # Переменные окружения
     TOKEN = os.environ.get("TELEGRAM_TOKEN")
-    app=ApplicationBuilder().token(TOKEN).build()
-    conv_handler=ConversationHandler(
+    WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
+    PORT = int(os.environ.get("PORT", 8080)) # PORT предоставляет Render
+    
+    # Проверка, что токен есть
+    if not TOKEN:
+        print("Ошибка: Переменная окружения TELEGRAM_TOKEN не найдена.")
+        exit(1)
+
+    # Инициализация приложения
+    app: Application = ApplicationBuilder().token(TOKEN).build()
+    
+    # Добавление обработчиков (без изменений)
+    conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start',start)],
         states={
             CHOOSING_DRINK:[CallbackQueryHandler(choose_drink)],
@@ -107,5 +122,18 @@ if __name__=="__main__":
         fallbacks=[CommandHandler('cancel',cancel)]
     )
     app.add_handler(conv_handler)
-    print("Бот запущен...")
-    app.run_polling()
+    
+    # Логика запуска: Webhook для Render, Polling для локального запуска
+    if WEBHOOK_URL:
+        # Режим Webhook для Render
+        print("Бот запущен в режиме Webhook...")
+        app.run_webhook(
+            listen="0.0.0.0", # Важно: слушать все внешние интерфейсы
+            port=PORT, # Использовать порт, предоставленный Render
+            url_path=TOKEN, # Путь Webhook (часто используют токен или случайную строку)
+            webhook_url=f"{WEBHOOK_URL}/{TOKEN}" # Полный URL для установки Webhook
+        )
+    else:
+        # Режим Long Polling для локального тестирования
+        print("WEBHOOK_URL не установлен. Запуск в режиме Polling...")
+        app.run_polling(poll_interval=3)
